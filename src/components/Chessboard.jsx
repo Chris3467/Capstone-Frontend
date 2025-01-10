@@ -3,10 +3,10 @@ import { Chessboard } from "react-chessboard";
 import { Chess } from "chess.js";
 
 const ChessboardComponent = () => {
-  const [game] = useState(new Chess()); // Keep a single instance of Chess
+  const [game] = useState(new Chess()); // Keep a stable Chess instance
   const [isWhiteTurn, setIsWhiteTurn] = useState(true); // Track the current turn
-  const [gameOver, setGameOver] = useState(false); // Track game over status
   const [fen, setFen] = useState(game.fen()); // Track board position
+  const [gameOver, setGameOver] = useState(false); // Track game over status
 
   const onDrop = (sourceSquare, targetSquare) => {
     if (gameOver) {
@@ -26,7 +26,8 @@ const ChessboardComponent = () => {
       setIsWhiteTurn(!isWhiteTurn); // Switch turn
 
       // Check if the game is over
-      if (game.game_over()) {
+      if (game.isGameOver()) {
+        // Correct method call for chess.js
         setGameOver(true);
         alert("Game over!");
       }
@@ -39,9 +40,9 @@ const ChessboardComponent = () => {
     <div className="chessboard-container">
       <Chessboard
         position={fen}
-        onPieceDrop={onDrop} // Callback for react-chessboard
-        boardOrientation={isWhiteTurn ? "white" : "black"} // Orient the board
-        width={600} // Adjust size as needed
+        onPieceDrop={onDrop}
+        boardOrientation={isWhiteTurn ? "white" : "black"}
+        width={600}
       />
       <div>
         {gameOver
