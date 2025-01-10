@@ -1,0 +1,30 @@
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #f8f9fa; /* Optional: background color */
+}
+
+.nav-home {
+  margin-right: auto; /* Pushes it to the left */
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px; /* Adjust spacing between links */
+}
+body {
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.chessboard-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
