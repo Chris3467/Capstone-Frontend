@@ -13,7 +13,6 @@ export async function signUp(userData) {
 
   // check is request was successful
   if (res.ok) {
-    // eventually, res.json() will resolve to the JWT
     return res.json();
   } else {
     throw new Error("Invalid Sign Up");

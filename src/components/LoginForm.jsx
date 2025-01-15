@@ -23,8 +23,10 @@ function LoginForm({ setUser }) {
       // object includes in the payload of the JWT
       const user = await userServices.login(credentials);
       console.log(user);
-      setUser(user);
+      setUser(user.name);
     } catch (err) {
+      const errorMessage =
+        err.response?.data?.message || "Log in Failed - Try Again";
       setError("Log in Failed - Try Again");
     }
   }
