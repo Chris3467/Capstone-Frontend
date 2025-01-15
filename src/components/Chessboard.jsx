@@ -29,7 +29,7 @@ const ChessboardComponent = () => {
       if (game.isGameOver()) {
         // Correct method call for chess.js
         setGameOver(true);
-        alert("Game over!");
+        alert("Checkmate!");
       }
     } else {
       alert("Invalid move!");
@@ -44,7 +44,7 @@ const ChessboardComponent = () => {
         boardOrientation={isWhiteTurn ? "white" : "black"}
         width={600}
       />
-      <div>
+      <div className="turn">
         {gameOver
           ? "Game Over!"
           : isWhiteTurn

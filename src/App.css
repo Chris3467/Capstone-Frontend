@@ -1,21 +1,32 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+body {
+  background-color: rgb(247, 220, 185);
+}
+
 .nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color: #f8f9fa; /* Optional: background color */
+  background-color: rgb(209, 218, 227);
 }
 
 .nav-home {
-  margin-right: auto; /* Pushes it to the left */
+  margin-right: auto;
 }
 
 .nav-links {
   display: flex;
-  gap: 20px; /* Adjust spacing between links */
+  gap: 20px;
 }
-body {
-  font-family: Arial, sans-serif;
+
+.nav a {
+  text-decoration: none;
+  color: rgb(38, 20, 20);
 }
 
 h1 {
@@ -27,4 +38,33 @@ h1 {
   display: flex;
   justify-content: center;
   margin-top: 20px;
+  width: 650px;
+  height: 500px;
+  gap: 20px;
+}
+
+.turn {
+  background-color: aliceblue;
+  height: 50px;
+  text-align: center;
+  border: solid black 1px;
+  border-radius: 10px;
+}
+
+.signUpForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h2,
+h3 {
+  text-align: center;
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
 }
