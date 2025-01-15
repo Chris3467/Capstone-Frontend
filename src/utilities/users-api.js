@@ -26,6 +26,8 @@ export async function login(credentials) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(credentials),
   });
+  console.log(credentials);
+  console.log(res);
   // check if successful
   if (res.ok) {
     // this will resolve to the JWT
