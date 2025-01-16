@@ -1,9 +1,18 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SignUpForm from "../components/SignUpForm";
 import LoginForm from "../components/LoginForm";
+import { getUser } from "../utilities/users-services";
 
 function Profile() {
   const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    async function fetchUser() {
+      const userData = await getUser();
+      setUser(userData);
+    }
+    fetchUser();
+  }, []);
 
   // Dummy stats for demonstration purposes
   const stats = {

@@ -39,10 +39,11 @@ const ChessboardComponent = () => {
   return (
     <div className="chessboard-container">
       <Chessboard
+        className="board"
         position={fen}
         onPieceDrop={onDrop}
         boardOrientation={isWhiteTurn ? "white" : "black"}
-        width={600}
+        width={550}
       />
       <div className="turn">
         {gameOver
