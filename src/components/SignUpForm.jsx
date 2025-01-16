@@ -12,6 +12,7 @@ function SignUpForm() {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    console.log(formData);
     setError("");
   };
 
@@ -22,11 +23,10 @@ function SignUpForm() {
 
     try {
       const submitData = { ...formData };
-      delete submitData.confirmPassword;
       console.log(submitData);
       const user = await signUp(submitData);
       console.log(user);
-      props.setUser(user);
+      setUser(user);
     } catch (err) {
       setError("Sign up failed - try again");
     }

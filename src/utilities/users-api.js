@@ -3,6 +3,7 @@ const API_URL = "/api/users";
 const URL = LOCAL_URL + API_URL;
 
 export async function signUp(userData) {
+  console.log(userData);
   // fetch uses an options object as a second arg to make requests other then basic GET requests, include data, headers, ect
   const res = await fetch(URL, {
     method: "POST",
@@ -10,7 +11,7 @@ export async function signUp(userData) {
     // fetch requires data payloads to be stringified and assigned to a body property on the options object
     body: JSON.stringify(userData),
   });
-
+  console.log(res);
   // check is request was successful
   if (res.ok) {
     return res.json();

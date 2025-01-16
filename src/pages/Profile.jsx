@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import SignUpForm from "../components/SignUpForm";
 import LoginForm from "../components/LoginForm";
-import { getUser } from "../utilities/users-services";
+import { getUser, logOut } from "../utilities/users-services";
 
 function Profile() {
   const [user, setUser] = useState(null);
@@ -28,6 +28,7 @@ function Profile() {
   }, []);
 
   const handleLogout = () => {
+    logOut();
     setUser(null); // Clear user state
   };
 

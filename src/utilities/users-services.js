@@ -1,6 +1,7 @@
 import * as usersAPI from "./users-api";
 
 export async function signUp(userData) {
+  console.log(userData);
   const token = await usersAPI.signUp(userData);
   console.log(token);
 
@@ -41,4 +42,4 @@ export function logOut() {
   localStorage.removeItem("token");
 }
 
-export default { login };
+export default { login, logOut };
