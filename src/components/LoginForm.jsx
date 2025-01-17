@@ -24,6 +24,7 @@ function LoginForm({ setUser }) {
       const user = await userServices.login(credentials);
       console.log(user);
       setUser(user.name);
+      window.location.href = "http://localhost:5173/profile";
     } catch (err) {
       const errorMessage =
         err.response?.data?.message || "Log in Failed - Try Again";
