@@ -109,12 +109,11 @@ function Profile() {
     <>
       {!user ? (
         <>
-          <h1>Welcome to the Profile Page</h1>
           <SignUpForm setUser={setUser} />
           <LoginForm setUser={setUser} />
         </>
       ) : (
-        <div>
+        <div className="profile">
           <h1>Welcome, {user.name}!</h1>
           <p>Email: {user.email}</p>
           <h2>Your Stats</h2>

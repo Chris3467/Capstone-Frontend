@@ -4,7 +4,8 @@ import ChessboardComponent from "../components/Chessboard";
 const Dashboard = () => {
   return (
     <div>
-      <h1>Chess Dashboard</h1>
+      <h1>Test your skills!</h1>
+      <br />
       <ChessboardComponent />
     </div>
   );

@@ -37,14 +37,31 @@ const ChessboardComponent = () => {
   };
 
   return (
-    <div className="chessboard-container">
-      <Chessboard
-        className="board"
-        position={fen}
-        onPieceDrop={onDrop}
-        boardOrientation={isWhiteTurn ? "white" : "black"}
-        width={550}
-      />
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <div
+        style={{
+          display: "inline-block",
+          padding: "10px",
+          height: "600px",
+          width: "600px",
+          backgroundColor: "#2225",
+          border: "solid",
+          borderRadius: "10px",
+        }}
+      >
+        <Chessboard
+          position={fen}
+          onPieceDrop={onDrop}
+          boardOrientation={isWhiteTurn ? "white" : "black"}
+          width={550}
+        />
+      </div>
       <div className="turn">
         {gameOver
           ? "Game Over!"
