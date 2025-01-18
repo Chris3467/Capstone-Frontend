@@ -1,7 +1,11 @@
-import React from "react";
+import TrainingComponent from "../components/Training";
 
 function Training() {
-  return <div>Training</div>;
+  return (
+    <div>
+      <TrainingComponent />
+    </div>
+  );
 }
 
 export default Training;

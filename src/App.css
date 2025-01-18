@@ -5,8 +5,8 @@
 }
 
 body {
-  background-color: #d4b89e; /* Lighter brown background */
-  font-family: "Arial", sans-serif; /* Clean and modern font */
+  background-color: #d4b89e;
+  font-family: "Arial", sans-serif;
 }
 
 .nav {
@@ -14,8 +14,8 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color: #6b4f3b; /* Dark brown for the navbar */
-  border: solid 1px #4c3628; /* Slightly darker brown border */
+  background-color: #6b4f3b;
+  border: solid 1px #4c3628;
   height: 65px;
 }
 
@@ -30,22 +30,31 @@ body {
 
 .nav a {
   text-decoration: none;
-  color: #f0e2c8; /* Light beige color for links */
+  color: #f0e2c8;
 }
 
 h1 {
   text-align: center;
   margin-top: 20px;
-  color: #4c3628; /* Darker color for contrast */
+  color: #4c3628;
 }
 
 .turn {
-  background-color: #f0e2c8; /* Beige background */
+  position: relative;
+  top: 10px;
+  right: 10px;
+  background-color: #fff;
+  color: #000;
   height: 50px;
-  width: 75px;
-  text-align: center;
-  border: solid black 1px;
+  width: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 10;
 }
 
 .signUpForm,
@@ -54,49 +63,49 @@ h1 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 20px; /* Adds space between form elements */
-  background-color: #bea58d; /* Matching background color */
+  gap: 20px;
+  background-color: #bea58d;
   padding: 30px 40px;
-  border-radius: 15px; /* Rounded corners */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 400px; /* Max width for modern form size */
-  margin: 0 auto; /* Centered form */
+  max-width: 400px;
+  margin: 0 auto;
 }
 
 h2,
 h3 {
   text-align: center;
   color: #4c3628;
-  padding: 20px; /* Dark text for headings */
+  padding: 20px;
 }
 
 input[type="text"],
 input[type="password"],
 input[type="email"],
 button {
-  width: 100%; /* Full width for inputs and buttons */
+  width: 100%;
   padding: 12px 15px;
   margin-bottom: 15px;
   border: 1px solid #ccc;
-  border-radius: 10px; /* Rounded corners */
+  border-radius: 10px;
   font-size: 16px;
   color: #333;
-  background-color: #f9f9f9; /* Light background for inputs */
-  transition: all 0.3s ease; /* Smooth transition for interactive effects */
+  background-color: #f9f9f9;
+  transition: all 0.3s ease;
 }
 
 input[type="text"]:focus,
 input[type="password"]:focus,
 input[type="email"]:focus {
   outline: none;
-  border-color: #6b4f3b; /* Focused border color */
-  box-shadow: 0 0 5px rgba(107, 79, 59, 0.5); /* Subtle shadow on focus */
+  border-color: #6b4f3b;
+  box-shadow: 0 0 5px rgba(107, 79, 59, 0.5);
 }
 
 button {
-  background-color: #6b4f3b; /* Dark brown background for buttons */
-  color: #f0e2c8; /* Light text on button */
+  background-color: #6b4f3b;
+  color: #f0e2c8;
   border: none;
   cursor: pointer;
   font-size: 18px;
@@ -105,16 +114,16 @@ button {
 }
 
 button:hover {
-  background-color: #4c3628; /* Darker shade on hover */
+  background-color: #4c3628;
 }
 
 button:active {
-  transform: scale(0.98); /* Slight scale effect on click */
+  transform: scale(0.98);
 }
 
 input[type="submit"],
 button:disabled {
-  background-color: #ccc; /* Gray background for disabled buttons */
+  background-color: #ccc;
   cursor: not-allowed;
 }
 
@@ -122,17 +131,17 @@ button:disabled {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #d4b89e; /* Matching background color with the page */
+  background-color: #d4b89e;
   padding: 30px 40px;
-  border-radius: 15px; /* Rounded corners for the profile card */
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 500px; /* Max width for a modern profile card */
-  margin: 20px auto; /* Centered on the page */
+  max-width: 500px;
+  margin: 20px auto;
 }
 
 .profile h1 {
-  color: #4c3628; /* Dark text for the welcome message */
+  color: #4c3628;
   font-size: 24px;
   margin-bottom: 15px;
 }
@@ -140,38 +149,38 @@ button:disabled {
 .profile p {
   color: #333;
   font-size: 16px;
-  margin: 5px 0; /* Consistent margin between text elements */
+  margin: 5px 0;
 }
 
 .profile h2 {
-  color: #4c3628; /* Darker color for section headers */
+  color: #4c3628;
   font-size: 20px;
-  margin: 20px 0 10px; /* Spacing for headings */
+  margin: 20px 0 10px;
 }
 
 .profile button {
-  background-color: #6b4f3b; /* Dark brown background for buttons */
-  color: #f0e2c8; /* Light text on button */
+  background-color: #6b4f3b;
+  color: #f0e2c8;
   border: none;
   cursor: pointer;
   font-size: 16px;
   padding: 10px 15px;
   margin: 10px 0;
-  border-radius: 10px; /* Rounded corners */
+  border-radius: 10px;
   transition: background-color 0.3s ease;
-  width: 200px; /* Fixed width for buttons */
+  width: 200px;
 }
 
 .profile button:hover {
-  background-color: #4c3628; /* Darker shade on hover */
+  background-color: #4c3628;
 }
 
 .profile button:active {
-  transform: scale(0.98); /* Slight scale effect on click */
+  transform: scale(0.98);
 }
 
 .profile button[style] {
-  color: red; /* Specifically for the delete button */
+  color: red;
 }
 
 .profile form {
@@ -185,45 +194,45 @@ button:disabled {
 .profile form input[type="email"],
 .profile form input[type="password"],
 .profile form button {
-  width: 100%; /* Full width for inputs and buttons */
+  width: 100%;
   padding: 12px 15px;
   margin-bottom: 10px;
   border: 1px solid #ccc;
   border-radius: 10px;
   font-size: 16px;
   color: #333;
-  background-color: #f9f9f9; /* Light background for inputs */
-  transition: all 0.3s ease; /* Smooth transition for interactive effects */
+  background-color: #f9f9f9;
+  transition: all 0.3s ease;
 }
 
 .profile form input[type="text"]:focus,
 .profile form input[type="email"]:focus,
 .profile form input[type="password"]:focus {
   outline: none;
-  border-color: #6b4f3b; /* Focused border color */
-  box-shadow: 0 0 5px rgba(107, 79, 59, 0.5); /* Subtle shadow on focus */
+  border-color: #6b4f3b;
+  box-shadow: 0 0 5px rgba(107, 79, 59, 0.5);
 }
 
 .profile form button {
-  background-color: #6b4f3b; /* Dark brown background for form submit button */
-  color: #f0e2c8; /* Light text */
+  background-color: #6b4f3b;
+  color: #f0e2c8;
   font-weight: bold;
 }
 
 .profile form button:hover {
-  background-color: #4c3628; /* Darker shade on hover */
+  background-color: #4c3628;
 }
 
 .profile form button:active {
-  transform: scale(0.98); /* Slight scale effect on click */
+  transform: scale(0.98);
 }
 
 .home-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #d4b89e; /* Light background to match the theme */
-  color: #4c3628; /* Dark brown text color for good contrast */
+  background-color: #b59c82;
+  color: #4c3628;
   padding: 40px 20px;
   text-align: center;
   border-radius: 15px;
@@ -275,8 +284,8 @@ button:disabled {
 }
 
 .start-button {
-  background-color: #6b4f3b; /* Dark brown background for the button */
-  color: #f0e2c8; /* Light text on the button */
+  background-color: #6b4f3b;
+  color: #f0e2c8;
   padding: 15px 30px;
   font-size: 18px;
   border: none;
@@ -286,9 +295,9 @@ button:disabled {
 }
 
 .start-button:hover {
-  background-color: #4c3628; /* Darker shade on hover */
+  background-color: #4c3628;
 }
 
 .start-button:active {
-  transform: scale(0.98); /* Slight scale effect on click */
+  transform: scale(0.98);
 }

@@ -36,17 +36,43 @@ const ChessboardComponent = () => {
     }
   };
 
+  const resetGame = () => {
+    game.reset(); // Reset the chess game state
+    setFen(game.fen()); // Update FEN
+    setIsWhiteTurn(true); // Reset turn to white
+    setGameOver(false); // Clear game over status
+  };
+
   return (
     <div
       style={{
         display: "flex",
-        justifyContent: "center",
+        flexDirection: "column",
         alignItems: "center",
       }}
     >
       <div
+        className="turn"
         style={{
-          display: "inline-block",
+          backgroundColor: isWhiteTurn ? "#fff" : "#000",
+          color: isWhiteTurn ? "#000" : "#fff",
+          padding: "10px 20px",
+          borderRadius: "10px",
+          fontSize: "16px",
+          fontWeight: "bold",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+          marginBottom: "20px",
+          textAlign: "center",
+        }}
+      >
+        {gameOver
+          ? "Game Over!"
+          : isWhiteTurn
+          ? "White's Turn"
+          : "Black's Turn"}
+      </div>
+      <div
+        style={{
           padding: "10px",
           height: "600px",
           width: "600px",
@@ -62,12 +88,23 @@ const ChessboardComponent = () => {
           width={550}
         />
       </div>
-      <div className="turn">
-        {gameOver
-          ? "Game Over!"
-          : isWhiteTurn
-          ? "White's Turn"
-          : "Black's Turn"}
+      <div style={{ textAlign: "center", marginTop: "20px" }}>
+        <button
+          onClick={resetGame}
+          style={{
+            padding: "10px 20px",
+            backgroundColor: "#6b4f3b",
+            color: "#f0e2c8",
+            border: "none",
+            borderRadius: "10px",
+            cursor: "pointer",
+            fontWeight: "bold",
+            fontSize: "16px",
+            transition: "background-color 0.3s ease",
+          }}
+        >
+          Restart Game
+        </button>
       </div>
     </div>
   );
