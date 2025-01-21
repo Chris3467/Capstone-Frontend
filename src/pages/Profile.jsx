@@ -3,6 +3,21 @@ import SignUpForm from "../components/SignUpForm";
 import LoginForm from "../components/LoginForm";
 import { getUser, logOut } from "../utilities/users-services";
 
+// Function to fetch chess pieces
+const fetchPieces = async () => {
+  try {
+    const response = await fetch("http://localhost:5052/api/pieces");
+    if (!response.ok) {
+      throw new Error("Failed to fetch chess pieces");
+    }
+    const pieces = await response.json();
+    return pieces;
+  } catch (err) {
+    console.error("Error fetching pieces:", err);
+    return null;
+  }
+};
+
 function Profile() {
   const [user, setUser] = useState(null);
   const [editing, setEditing] = useState(false);
@@ -11,6 +26,8 @@ function Profile() {
     email: "",
     password: "",
   });
+  const [pieces, setPieces] = useState([]); // State to store pieces
+  const [showPieces, setShowPieces] = useState(false); // Toggle state for displaying pieces
 
   useEffect(() => {
     async function fetchUser() {
@@ -99,10 +116,12 @@ function Profile() {
     }
   };
 
-  // Dummy stats for demonstration purposes
-  const stats = {
-    gamesPlayed: 10,
-    movesPerGame: 35,
+  const handleFetchPieces = async () => {
+    const piecesData = await fetchPieces();
+    if (piecesData) {
+      setPieces(piecesData);
+      setShowPieces(true); // Show the pieces list
+    }
   };
 
   return (
@@ -116,9 +135,6 @@ function Profile() {
         <div className="profile">
           <h1>Welcome, {user.name}!</h1>
           <p>Email: {user.email}</p>
-          <h2>Your Stats</h2>
-          <p>Games Played: {stats.gamesPlayed}</p>
-          <p>Average Moves Per Game: {stats.movesPerGame}</p>
           <button onClick={handleLogout}>Log Out</button>
           <button onClick={handleDelete} style={{ color: "red" }}>
             Delete Account
@@ -126,6 +142,7 @@ function Profile() {
           <button onClick={handleEditToggle}>
             {editing ? "Cancel Edit" : "Edit Profile"}
           </button>
+
           {editing && (
             <form onSubmit={handleUpdate}>
               <label>
@@ -157,6 +174,26 @@ function Profile() {
               </label>
               <button type="submit">Save Changes</button>
             </form>
+          )}
+
+          <h2>Your Stats</h2>
+          <p>Games Played: 10</p>
+          <p>Average Moves Per Game: 35</p>
+
+          <button onClick={handleFetchPieces}>Show Chess Pieces</button>
+
+          {showPieces && (
+            <div className="pieces-list">
+              <h2>Chess Pieces</h2>
+              <ul>
+                {pieces.map((piece) => (
+                  <li key={piece.name}>
+                    {piece.name}: {piece.value} points
+                  </li>
+                ))}
+              </ul>
+              <button onClick={() => setShowPieces(false)}>Close</button>
+            </div>
           )}
         </div>
       )}
