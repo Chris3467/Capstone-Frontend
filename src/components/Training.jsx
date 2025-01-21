@@ -1,67 +1,140 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Chessboard } from "react-chessboard";
-
-// ErrorBoundary for debugging unexpected issues
-class ErrorBoundary extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { hasError: false };
-  }
-
-  static getDerivedStateFromError(error) {
-    return { hasError: true };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    console.error("Error Boundary Caught:", error, errorInfo);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <h1>Something went wrong. Please check the console for details.</h1>
-      );
-    }
-    return this.props.children;
-  }
-}
+import { Chess } from "chess.js";
 
 const TrainingComponent = () => {
-  const [step, setStep] = useState(0); // Tracks the tutorial step
-  const [highlightSquares, setHighlightSquares] = useState({}); // Tracks highlighted squares
+  const [game] = useState(new Chess()); // Keep a stable Chess instance
+  const [isWhiteTurn, setIsWhiteTurn] = useState(true); // Track the current turn
+  const [fen, setFen] = useState(game.fen()); // Track board position
+  const [gameOver, setGameOver] = useState(false); // Track game over status
+  const [highlightSquares, setHighlightSquares] = useState({}); // Track highlighted squares
+  const [arrows, setArrows] = useState([]); // Track arrows pointing to legal moves
+  const [selectedPiece, setSelectedPiece] = useState(null); // Track selected piece
 
-  // Tutorial steps
-  const tutorialSteps = [
-    {
-      message: "Welcome to Chess! Let's start with the Pawn.",
-      position: "start", // Initial board position
-      highlights: { e2: "rgba(0, 255, 0, 0.5)", e4: "rgba(255, 255, 0, 0.5)" },
-    },
-    {
-      message: "This is the Rook. It moves vertically or horizontally.",
-      position: "start", // Initial board position
-      highlights: { a1: "rgba(0, 255, 0, 0.5)", a4: "rgba(255, 255, 0, 0.5)" },
-    },
-    {
-      message: "Great! Now explore the game on your own.",
-      position: "start", // Initial board position
-      highlights: {},
-    },
-  ];
+  const onDrop = (sourceSquare, targetSquare) => {
+    if (gameOver) {
+      alert("Game is over! Start a new game.");
+      return;
+    }
 
-  const handleNextStep = () => {
-    const nextStep = Math.min(step + 1, tutorialSteps.length - 1);
-    const nextHighlights = tutorialSteps[nextStep]?.highlights || {};
+    // Attempt to make the move
+    const move = game.move({
+      from: sourceSquare,
+      to: targetSquare,
+      promotion: "q", // Auto promote to queen
+    });
 
-    // Ensure valid highlight styles
-    const validHighlights = Object.fromEntries(
-      Object.entries(nextHighlights).filter(
-        ([key, value]) => typeof value === "string"
-      )
-    );
+    if (move) {
+      setFen(game.fen()); // Update board position
+      setIsWhiteTurn(!isWhiteTurn); // Switch turn
 
-    setStep(nextStep);
-    setHighlightSquares(validHighlights);
+      // Check if the game is over
+      if (game.isGameOver()) {
+        setGameOver(true);
+        alert("Checkmate!");
+      }
+
+      // Reset highlight squares and arrows after move
+      setHighlightSquares({});
+      setArrows([]);
+      setSelectedPiece(null);
+    } else {
+      alert("Invalid move!");
+    }
+  };
+
+  const resetGame = () => {
+    game.reset(); // Reset the chess game state
+    setFen(game.fen()); // Update FEN
+    setIsWhiteTurn(true); // Reset turn to white
+    setGameOver(false); // Clear game over status
+    setHighlightSquares({}); // Reset highlighted squares
+    setArrows([]); // Clear arrows
+    setSelectedPiece(null); // Clear selected piece
+  };
+
+  const handleSquareClick = (square) => {
+    if (gameOver) {
+      alert("Game is over! Start a new game.");
+      return;
+    }
+
+    // If the square has been selected, reset selection
+    if (selectedPiece === square) {
+      setSelectedPiece(null);
+      setHighlightSquares({});
+      setArrows([]);
+      return;
+    }
+
+    // Get legal moves for the selected piece
+    const legalMoves = game.legal_moves || []; // Ensure it's always an array
+    const moves = legalMoves.filter((move) => move.from === square);
+    const newHighlightSquares = {};
+    const newArrows = [];
+
+    // Mark legal and illegal moves
+    game.board().forEach((row, rowIndex) => {
+      row.forEach((square) => {
+        const squareName = square ? square.square : null;
+        const isLegal = moves.some((move) => move.to === squareName);
+        const isIllegal = !isLegal && squareName;
+
+        if (isLegal) {
+          newHighlightSquares[squareName] = {
+            backgroundColor: "rgba(0, 255, 0, 0.5)",
+          }; // Green for legal moves
+        }
+        if (isIllegal) {
+          newHighlightSquares[squareName] = {
+            backgroundColor: "rgba(255, 0, 0, 0.5)",
+          }; // Red for illegal moves
+        }
+      });
+    });
+
+    setSelectedPiece(square);
+    setHighlightSquares(newHighlightSquares);
+    setArrows(newArrows);
+  };
+
+  const handlePieceMouseDown = (square) => {
+    // Handle the piece click down event to show legal moves
+    handleSquareClick(square);
+  };
+
+  const renderArrows = () => {
+    return arrows.map((arrow, index) => (
+      <div
+        key={index}
+        style={{
+          position: "absolute",
+          top: `${arrow.source.y * 75 + 12}px`,
+          left: `${arrow.source.x * 75 + 12}px`,
+          width: "50px",
+          height: "50px",
+          backgroundColor: "transparent",
+          pointerEvents: "none", // Make sure the arrow doesn't block interaction
+          zIndex: 1,
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            top: "-10px",
+            left: "-10px",
+            width: "20px",
+            height: "20px",
+            borderLeft: "3px solid rgba(0, 255, 0, 0.8)",
+            borderTop: "3px solid rgba(0, 255, 0, 0.8)",
+            transform: `rotate(${Math.atan2(
+              arrow.target.y - arrow.source.y,
+              arrow.target.x - arrow.source.x
+            )}rad)`,
+          }}
+        ></div>
+      </div>
+    ));
   };
 
   return (
@@ -70,45 +143,53 @@ const TrainingComponent = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        padding: "20px",
       }}
     >
-      <h1>Chess Training</h1>
-      <p
+      <div
+        className="turn"
         style={{
-          marginBottom: "10px",
-          fontSize: "18px",
+          backgroundColor: isWhiteTurn ? "#fff" : "#000",
+          color: isWhiteTurn ? "#000" : "#fff",
+          padding: "10px 20px",
+          borderRadius: "10px",
+          fontSize: "16px",
           fontWeight: "bold",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+          marginBottom: "20px",
           textAlign: "center",
         }}
       >
-        {tutorialSteps[step]?.message || "Loading..."}
-      </p>
+        {gameOver
+          ? "Game Over!"
+          : isWhiteTurn
+          ? "White's Turn"
+          : "Black's Turn"}
+      </div>
       <div
         style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
+          padding: "10px",
+          height: "600px",
+          width: "600px",
+          backgroundColor: "#2225",
+          border: "solid",
+          borderRadius: "10px",
+          position: "relative", // Make the chessboard container relative
         }}
       >
-        <div
-          style={{
-            padding: "10px",
-            backgroundColor: "#2225",
-            border: "solid",
-            borderRadius: "10px",
-          }}
-        >
-          <Chessboard
-            position={tutorialSteps[step]?.position || "start"}
-            customSquareStyles={highlightSquares}
-            width={550}
-          />
-        </div>
+        <Chessboard
+          position={fen}
+          onPieceDrop={onDrop}
+          boardOrientation={isWhiteTurn ? "white" : "black"}
+          width={550}
+          customSquareStyles={highlightSquares} // Apply custom styles to highlighted squares
+          onPieceMouseDown={handlePieceMouseDown} // Show valid moves when holding a piece
+        />
+        {renderArrows()} {/* Render the arrows */}
+      </div>
+      <div style={{ textAlign: "center", marginTop: "20px" }}>
         <button
-          onClick={handleNextStep}
+          onClick={resetGame}
           style={{
-            marginLeft: "20px",
             padding: "10px 20px",
             backgroundColor: "#6b4f3b",
             color: "#f0e2c8",
@@ -120,18 +201,11 @@ const TrainingComponent = () => {
             transition: "background-color 0.3s ease",
           }}
         >
-          Next Step
+          Restart Game
         </button>
       </div>
     </div>
   );
 };
 
-// Wrap the TrainingComponent in an ErrorBoundary
-export default function App() {
-  return (
-    <ErrorBoundary>
-      <TrainingComponent />
-    </ErrorBoundary>
-  );
-}
+export default TrainingComponent;

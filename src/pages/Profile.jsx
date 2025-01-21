@@ -48,7 +48,7 @@ function Profile() {
             },
           }
         );
-
+        localStorage.removeItem("token");
         if (response.ok) {
           setUser(null); // Clear user state on successful deletion
           alert("Account deleted successfully.");
