@@ -5,6 +5,7 @@ import Training from "./pages/Training";
 import Profile from "./pages/Profile";
 import Navbar from "./components/Navbar";
 import PrivateRoute from "./components/PrivateRoute";
+import Footer from "./components/Footer";
 
 import "./App.css";
 
@@ -25,6 +26,8 @@ function App() {
         />
         <Route path="/profile" element={<Profile />} />
       </Routes>
+
+      <Footer />
     </>
   );
 }

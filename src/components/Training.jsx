@@ -1,20 +1,54 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Chessboard } from "react-chessboard";
 import { Chess } from "chess.js";
 
 const TrainingComponent = () => {
-  const [game] = useState(new Chess()); // Keep a stable Chess instance
-  const [isWhiteTurn, setIsWhiteTurn] = useState(true); // Track the current turn
-  const [fen, setFen] = useState(game.fen()); // Track board position
-  const [gameOver, setGameOver] = useState(false); // Track game over status
-  const [highlightSquares, setHighlightSquares] = useState({}); // Track highlighted squares
-  const [arrows, setArrows] = useState([]); // Track arrows pointing to legal moves
-  const [selectedPiece, setSelectedPiece] = useState(null); // Track selected piece
+  const [game] = useState(new Chess()); // Chess.js instance
+  const [fen, setFen] = useState(game.fen()); // Board position
+  const [isWhiteTurn, setIsWhiteTurn] = useState(true); // Track current turn
+  const [gameOver, setGameOver] = useState(false); // Game over status
+  const [highlightSquares, setHighlightSquares] = useState({}); // Highlighted squares
+  const [selectedPieceInfo, setSelectedPieceInfo] = useState(null); // Selected piece info
+
+  // Get the full name of the piece
+  const getFullPieceName = (piece) => {
+    if (!piece) return "None";
+    const color = piece.color === "w" ? "White" : "Black";
+    const pieceType = piece.type.charAt(0).toUpperCase() + piece.type.slice(1); // Capitalize first letter
+    return `${color} ${pieceType}`;
+  };
+
+  // Handle when a square is clicked
+  const onSquareClick = (square) => {
+    if (gameOver) return;
+
+    // Fetch legal moves for the selected piece
+    const moves = game.moves({ square, verbose: true });
+
+    if (moves.length === 0) return; // No legal moves for this piece
+
+    // Highlight squares for legal moves
+    const newHighlightSquares = {};
+    moves.forEach((move) => {
+      newHighlightSquares[move.to] = {
+        backgroundColor: "rgba(0, 255, 0, 0.5)", // Green for legal moves
+      };
+    });
+
+    setHighlightSquares(newHighlightSquares);
+
+    // Set selected piece info (full name and moves)
+    const piece = game.get(square); // Get piece info
+    const pieceName = getFullPieceName(piece); // Get the full name of the piece
+    const pieceMoves = moves.map((move) => move.to);
+
+    setSelectedPieceInfo({ pieceName, pieceMoves });
+  };
 
   const onDrop = (sourceSquare, targetSquare) => {
     if (gameOver) {
       alert("Game is over! Start a new game.");
-      return;
+      return false;
     }
 
     // Attempt to make the move
@@ -34,176 +68,121 @@ const TrainingComponent = () => {
         alert("Checkmate!");
       }
 
-      // Reset highlight squares and arrows after move
-      setHighlightSquares({});
-      setArrows([]);
-      setSelectedPiece(null);
-    } else {
-      alert("Invalid move!");
+      setHighlightSquares({}); // Clear highlights
+      setSelectedPieceInfo(null); // Clear selected piece info
+      return true;
     }
+
+    alert("Invalid move!");
+    return false; // Prevent invalid move
   };
 
   const resetGame = () => {
-    game.reset(); // Reset the chess game state
+    game.reset(); // Reset game state
     setFen(game.fen()); // Update FEN
-    setIsWhiteTurn(true); // Reset turn to white
+    setIsWhiteTurn(true); // Reset turn
     setGameOver(false); // Clear game over status
-    setHighlightSquares({}); // Reset highlighted squares
-    setArrows([]); // Clear arrows
-    setSelectedPiece(null); // Clear selected piece
-  };
-
-  const handleSquareClick = (square) => {
-    if (gameOver) {
-      alert("Game is over! Start a new game.");
-      return;
-    }
-
-    // If the square has been selected, reset selection
-    if (selectedPiece === square) {
-      setSelectedPiece(null);
-      setHighlightSquares({});
-      setArrows([]);
-      return;
-    }
-
-    // Get legal moves for the selected piece
-    const legalMoves = game.legal_moves || []; // Ensure it's always an array
-    const moves = legalMoves.filter((move) => move.from === square);
-    const newHighlightSquares = {};
-    const newArrows = [];
-
-    // Mark legal and illegal moves
-    game.board().forEach((row, rowIndex) => {
-      row.forEach((square) => {
-        const squareName = square ? square.square : null;
-        const isLegal = moves.some((move) => move.to === squareName);
-        const isIllegal = !isLegal && squareName;
-
-        if (isLegal) {
-          newHighlightSquares[squareName] = {
-            backgroundColor: "rgba(0, 255, 0, 0.5)",
-          }; // Green for legal moves
-        }
-        if (isIllegal) {
-          newHighlightSquares[squareName] = {
-            backgroundColor: "rgba(255, 0, 0, 0.5)",
-          }; // Red for illegal moves
-        }
-      });
-    });
-
-    setSelectedPiece(square);
-    setHighlightSquares(newHighlightSquares);
-    setArrows(newArrows);
-  };
-
-  const handlePieceMouseDown = (square) => {
-    // Handle the piece click down event to show legal moves
-    handleSquareClick(square);
-  };
-
-  const renderArrows = () => {
-    return arrows.map((arrow, index) => (
-      <div
-        key={index}
-        style={{
-          position: "absolute",
-          top: `${arrow.source.y * 75 + 12}px`,
-          left: `${arrow.source.x * 75 + 12}px`,
-          width: "50px",
-          height: "50px",
-          backgroundColor: "transparent",
-          pointerEvents: "none", // Make sure the arrow doesn't block interaction
-          zIndex: 1,
-        }}
-      >
-        <div
-          style={{
-            position: "absolute",
-            top: "-10px",
-            left: "-10px",
-            width: "20px",
-            height: "20px",
-            borderLeft: "3px solid rgba(0, 255, 0, 0.8)",
-            borderTop: "3px solid rgba(0, 255, 0, 0.8)",
-            transform: `rotate(${Math.atan2(
-              arrow.target.y - arrow.source.y,
-              arrow.target.x - arrow.source.x
-            )}rad)`,
-          }}
-        ></div>
-      </div>
-    ));
+    setHighlightSquares({}); // Clear highlights
+    setSelectedPieceInfo(null); // Clear selected piece info
   };
 
   return (
     <div
       style={{
         display: "flex",
-        flexDirection: "column",
+        justifyContent: "space-between",
         alignItems: "center",
+        height: "100vh",
       }}
     >
       <div
-        className="turn"
         style={{
-          backgroundColor: isWhiteTurn ? "#fff" : "#000",
-          color: isWhiteTurn ? "#000" : "#fff",
-          padding: "10px 20px",
-          borderRadius: "10px",
-          fontSize: "16px",
-          fontWeight: "bold",
-          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-          marginBottom: "20px",
-          textAlign: "center",
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
-        {gameOver
-          ? "Game Over!"
-          : isWhiteTurn
-          ? "White's Turn"
-          : "Black's Turn"}
-      </div>
-      <div
-        style={{
-          padding: "10px",
-          height: "600px",
-          width: "600px",
-          backgroundColor: "#2225",
-          border: "solid",
-          borderRadius: "10px",
-          position: "relative", // Make the chessboard container relative
-        }}
-      >
-        <Chessboard
-          position={fen}
-          onPieceDrop={onDrop}
-          boardOrientation={isWhiteTurn ? "white" : "black"}
-          width={550}
-          customSquareStyles={highlightSquares} // Apply custom styles to highlighted squares
-          onPieceMouseDown={handlePieceMouseDown} // Show valid moves when holding a piece
-        />
-        {renderArrows()} {/* Render the arrows */}
-      </div>
-      <div style={{ textAlign: "center", marginTop: "20px" }}>
-        <button
-          onClick={resetGame}
+        <div
+          className="turn"
           style={{
+            backgroundColor: isWhiteTurn ? "#fff" : "#000",
+            color: isWhiteTurn ? "#000" : "#fff",
             padding: "10px 20px",
-            backgroundColor: "#6b4f3b",
-            color: "#f0e2c8",
-            border: "none",
             borderRadius: "10px",
-            cursor: "pointer",
-            fontWeight: "bold",
             fontSize: "16px",
-            transition: "background-color 0.3s ease",
+            fontWeight: "bold",
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+            marginBottom: "20px",
+            textAlign: "center",
           }}
         >
-          Restart Game
-        </button>
+          {gameOver
+            ? "Game Over!"
+            : isWhiteTurn
+            ? "White's Turn"
+            : "Black's Turn"}
+        </div>
+        <div
+          style={{
+            padding: "10px",
+            height: "600px",
+            width: "600px",
+            backgroundColor: "#2225",
+            border: "solid",
+            borderRadius: "10px",
+          }}
+        >
+          <Chessboard
+            position={fen}
+            onPieceDrop={onDrop}
+            customSquareStyles={highlightSquares} // Apply highlighted styles
+            boardOrientation={isWhiteTurn ? "white" : "black"}
+            width={550}
+            onSquareClick={onSquareClick} // Handle square clicks to show legal moves
+          />
+        </div>
+        <div style={{ textAlign: "center", marginTop: "20px" }}>
+          <button
+            onClick={resetGame}
+            style={{
+              padding: "10px 20px",
+              backgroundColor: "#6b4f3b",
+              color: "#f0e2c8",
+              border: "none",
+              borderRadius: "10px",
+              cursor: "pointer",
+              fontWeight: "bold",
+              fontSize: "16px",
+              transition: "background-color 0.3s ease",
+            }}
+          >
+            Restart Game
+          </button>
+        </div>
       </div>
+
+      {/* Aside showing selected piece info */}
+      {selectedPieceInfo && (
+        <aside
+          style={{
+            width: "250px",
+            padding: "20px",
+            backgroundColor: "#b59c82",
+            borderRadius: "10px",
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+            marginRight: "100px",
+          }}
+        >
+          <h3>Selected Piece: {selectedPieceInfo.pieceName}</h3>
+          <h4>Legal Moves:</h4>
+          <ul>
+            {selectedPieceInfo.pieceMoves.map((move, index) => (
+              <li key={index}>{move}</li>
+            ))}
+          </ul>
+        </aside>
+      )}
     </div>
   );
 };
