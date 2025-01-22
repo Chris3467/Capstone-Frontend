@@ -76,7 +76,6 @@ function SignUpForm() {
       </form>
       <br />
       <h3>OR</h3>
-      <br />
     </>
   );
 }

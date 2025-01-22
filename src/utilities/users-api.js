@@ -2,6 +2,8 @@ const LOCAL_URL = "http://localhost:5052";
 const API_URL = "/api/users";
 const URL = LOCAL_URL + API_URL;
 
+//const deployedUrl = "https://capstone-backend-yvig.onrender.com";
+//const URL = deployedUrl + API_URL;
 export async function signUp(userData) {
   console.log(userData);
   // fetch uses an options object as a second arg to make requests other then basic GET requests, include data, headers, ect
