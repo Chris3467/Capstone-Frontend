@@ -26,6 +26,9 @@ function SignUpForm() {
       const user = await signUp(submitData);
       console.log(user);
       setUser(user);
+
+      // Show a success message
+      alert("Sign-up successful! Please log in.");
     } catch (err) {
       setError("Sign up failed - try again");
     }

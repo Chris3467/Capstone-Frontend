@@ -10,7 +10,6 @@ const TrainingComponent = () => {
   const [highlightSquares, setHighlightSquares] = useState({}); // Highlighted squares
   const [selectedPieceInfo, setSelectedPieceInfo] = useState(null); // Selected piece info
 
-  // Get the full name of the piece
   const getFullPieceName = (piece) => {
     if (!piece) return "None";
     const color = piece.color === "w" ? "White" : "Black";

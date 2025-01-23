@@ -6,7 +6,10 @@ import { getUser, logOut } from "../utilities/users-services";
 // Function to fetch chess pieces
 const fetchPieces = async () => {
   try {
-    const response = await fetch("http://localhost:5052/api/pieces");
+    const response = await fetch(
+      "https://capstone-backend-yvig.onrender.com/api/pieces"
+      //"http://localhost:5052/api/pieces"
+    );
     if (!response.ok) {
       throw new Error("Failed to fetch chess pieces");
     }
@@ -30,22 +33,34 @@ function Profile() {
   const [showPieces, setShowPieces] = useState(false); // Toggle state for displaying pieces
 
   useEffect(() => {
-    async function fetchUser() {
-      const userData = await getUser();
-      setUser(userData);
-      if (userData) {
-        setFormData({
-          name: userData.name,
-          email: userData.email,
-          password: "",
-        });
-      }
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (storedUser) {
+      setUser(storedUser); // Use the data from localStorage if available
+      setFormData({
+        name: storedUser.name,
+        email: storedUser.email,
+        password: "",
+      });
+    } else {
+      fetchUser(); // If no user data in localStorage, fetch from the API
     }
-    fetchUser();
   }, []);
+
+  const fetchUser = async () => {
+    const userData = await getUser();
+    setUser(userData);
+    if (userData) {
+      setFormData({
+        name: userData.name,
+        email: userData.email,
+        password: "",
+      });
+    }
+  };
 
   const handleLogout = () => {
     logOut();
+    localStorage.removeItem("user"); // Clear cached user data
     setUser(null); // Clear user state
   };
 
@@ -57,7 +72,7 @@ function Profile() {
     ) {
       try {
         const response = await fetch(
-          `http://localhost:5052/api/users/${user._id}`,
+          `https://capstone-backend-yvig.onrender.com/api/users/${user._id}`,
           {
             method: "DELETE",
             headers: {
@@ -65,7 +80,7 @@ function Profile() {
             },
           }
         );
-        localStorage.removeItem("token");
+        localStorage.removeItem("user"); // Clear cached user data on account delete
         if (response.ok) {
           setUser(null); // Clear user state on successful deletion
           alert("Account deleted successfully.");
@@ -92,7 +107,7 @@ function Profile() {
     e.preventDefault();
     try {
       const response = await fetch(
-        `http://localhost:5052/api/users/${user._id}`,
+        `https://capstone-backend-yvig.onrender.com/api/users/${user._id}`,
         {
           method: "PUT",
           headers: {
@@ -104,9 +119,17 @@ function Profile() {
 
       if (response.ok) {
         const updatedUser = await response.json();
-        setUser(updatedUser);
+        setUser(updatedUser.user); // Set the updated user in state
+        setFormData({
+          name: updatedUser.user.name,
+          email: updatedUser.user.email,
+          password: "",
+        }); // Update formData state
         setEditing(false);
         alert("Profile updated successfully!");
+
+        // Optionally, re-fetch the user data
+        localStorage.setItem("user", JSON.stringify(updatedUser.user)); // Store in localStorage
       } else {
         alert("Failed to update profile.");
       }
